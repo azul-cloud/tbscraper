@@ -8,8 +8,8 @@ class TimeStampedModel(models.Model):
     An abstract base class model that provides selfupdating
     created and modified fields.
     '''
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
+    create_date = models.DateTimeField(auto_now_add=True)
+    modified_date = models.DateTimeField(auto_now=True)
     
     class Meta:
         abstract = True
@@ -48,3 +48,5 @@ class User(AbstractUser):
     absolutely sure the User class will not expand.
     '''
     alive = models.BooleanField(default=True)
+
+    
