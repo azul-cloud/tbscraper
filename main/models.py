@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils.text import slugify
 
 
 class TimeStampedModel(models.Model):
@@ -19,11 +20,11 @@ class SlugManager(models.Manager):
         return self.filter(slug=args[0])
 
 
-class SaveSlugBase(models.Model):
+class SaveSlug(models.Model):
     '''
     Base class to create a slugfield
     '''
-
+    title = models.CharField(max_length=40)
     slug = models.SlugField(db_index=True, unique=True, 
         editable=False, blank=True) 
 
@@ -32,41 +33,13 @@ class SaveSlugBase(models.Model):
     class Meta:
         abstract = True
 
-
-class SaveSlugTitle(SaveSlugBase):
-    '''
-    create a title field with the autosave slug field
-    '''
-    title = models.CharField(max_length=40)
-
     def save(self, *args, **kwargs):
         '''
         set the slug based on the title field
         '''
         self.slug = slugify(self.title)
         
-        super(SaveSlugTitle, self).save(*args, **kwargs)   
-
-    class Meta:
-        abstract = True
-
-
-class SaveSlugName(SaveSlugBase):
-    '''
-    create a name field with the autosave slug field
-    '''
-    name = models.CharField(max_length=40)
-
-    def save(self, *args, **kwargs):
-        '''
-        set the slug based on the name field
-        '''
-        self.slug = slugify(self.name)
-        
-        super(SaveSlugName, self).save(*args, **kwargs)   
-
-    class Meta:
-        abstract = True
+        super(SaveSlug, self).save(*args, **kwargs)  
 
 
 class User(AbstractUser):

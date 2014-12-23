@@ -7,6 +7,8 @@ from .models import User
 
 class MainModelTest(TestCase):
     def setUp(self):
+        self.prefix = "main_"
+
         self.user = get_user_model().objects.create_user(
             "main_test_user",
             "email@domain.com",
@@ -27,7 +29,7 @@ class MainViewTest(TestCase):
             password='testpassword')
 
     def test_home(self):
-        url = reverse('main_home')
+        url = reverse(self.prefix + 'home')
         response = self.client.get(url)
 
 

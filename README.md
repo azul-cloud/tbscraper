@@ -1,4 +1,6 @@
-Azul Cloud Start
+Travelpus
 =====
 
-This is the base for azul cloud projects. Pull from here to include all the defaults we include in a project
+Travel Blog Scraper pulls in travel blog articles from many different sites and displays them
+on our site in an easily searchable an self-updating manner. We take advantage of web scraping
+to get all the data that we need and provide a pleasant enviornment for our readers.
