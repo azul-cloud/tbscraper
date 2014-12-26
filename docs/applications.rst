@@ -1,5 +1,3 @@
-Give a description of the applications that are included in the project and their functions.
-
 =====MAIN=====
 The main app handles all the overhead needed for the site. Things like the home page,
 contact page, 
