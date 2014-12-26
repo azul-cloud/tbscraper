@@ -1,29 +1,11 @@
 import datetime
 
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import Max
 from django.utils import timezone
 
 from main.models import TimeStampedModel, SaveSlug
-
-
-class ScrapeSiteManager(models.Manager):
-    def last_scraped(self):
-        site_log = ScrapeLog.objects.filter(site=self)
-        return Max(site_log.create_date)
-
-    def log(self, instance, status, message, pages_detected, pages_scraped):
-        '''
-        make a scrapelog object
-        '''
-        ScrapeLog.objects.create(
-            site=instance,
-            status=status,
-            end_datetime=timezone.now(),
-            pages_detected=pages_detected,
-            pages_scraped=pages_scraped,
-        )
-
 
 
 class ScrapeSite(SaveSlug):
@@ -33,10 +15,15 @@ class ScrapeSite(SaveSlug):
     active = models.BooleanField(default=True)
     url = models.URLField()
 
-    objects = ScrapeSiteManager()
-
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('scrape_site', kwargs={'pk':self.id})
+
+    def last_scraped(self):
+        site_log = ScrapeLog.objects.filter(site=self)
+        return Max(site_log.create_date)
 
 
 class ScrapeLogManager(models.Manager):
@@ -56,8 +43,8 @@ class ScrapeLog(TimeStampedModel):
     )
 
     site = models.ForeignKey(ScrapeSite)
-    status = models.CharField(max_length=1, null=True, blank=True)
-    message = models.CharField(max_length=255, null=True, blank=True)
+    status = models.CharField(max_length=1)
+    message = models.CharField(max_length=255)
     end_datetime = models.DateTimeField(null=True)
     pages_detected = models.IntegerField(null=True)
     pages_scraped = models.IntegerField(null=True)

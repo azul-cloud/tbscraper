@@ -10,6 +10,8 @@ from .models import ScrapeSite, ScrapeLog
 
 class ScrapeModelTest(TestCase):
     def setUp(self):
+        self.prefix = 'scrape_'
+
         self.user = get_user_model().objects.create_user(
             "scrape_test_user",
             "scrape@domain.com",
@@ -17,16 +19,23 @@ class ScrapeModelTest(TestCase):
         )
 
         self.site = ScrapeSite.objects.create(title="My Test Site")
-        self.log1 = ScrapeSite.objects.log(self.site, "S", "Successfully logged", 0, 0)
-
-        self.prefix = 'scrape_'
+        self.log_success = ScrapeLog.objects.create(
+            site=self.site,
+            status="S", 
+            message="Successfully logged"
+        )
+        self.log_error = ScrapeLog.objects.create(
+            site=self.site, 
+            status="E",
+            message="Error occured"
+        )
 
     def test_site(self):
         site = ScrapeSite.objects.get(title=self.site.title)
         self.assertNotEqual(site.slug, None)
 
     def test_log(self):
-        log = ScrapeLog.objects.get(id=1)
+        log = ScrapeLog.objects.get(id=self.log_success.id)
 
 
 class ScrapeViewTest(TestCase):
@@ -41,6 +50,14 @@ class ScrapeViewTest(TestCase):
         url = reverse(self.prefix + 'logs')
         response = self.client.get(url)
 
+    def test_site(self):
+        url = reverse(self.prefix + 'site', kwargs={'pk':self.site.id})
+        response = self.client.get(url)
+        
+        self.assertContains(response, self.site.title)
+
 
 class ScrapeFormTest(TestCase):
     pass
+
+

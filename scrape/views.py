@@ -1,11 +1,12 @@
 import requests
 
 from django.shortcuts import render
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, DetailView
 
 from bs4 import BeautifulSoup
 
-from .models import ScrapeLog
+from .models import ScrapeLog, ScrapeSite
+from .runners import StepsOfATraveler
 
 
 class ScrapeLogListView(ListView):
@@ -23,3 +24,17 @@ class ScrapeAdminTemplateView(TemplateView):
     more refined.
     '''
     template_name = "scrapecontent/admin.html"
+
+    def get_context_data(self):
+        obj = StepsOfATraveler()
+
+        return {"object":obj}
+
+
+class ScrapeSiteDetailView(DetailView):
+    '''
+    Scrape an individual site
+    '''
+    model = ScrapeSite
+    template_name = "scrapecontent/site.html"
+
