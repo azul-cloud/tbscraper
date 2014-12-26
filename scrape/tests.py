@@ -50,6 +50,8 @@ class ScrapeViewTest(TestCase):
         url = reverse(self.prefix + 'logs')
         response = self.client.get(url)
 
+        # self.assertContains(response, self.site.title)
+
     def test_site(self):
         url = reverse(self.prefix + 'site', kwargs={'pk':self.site.id})
         response = self.client.get(url)

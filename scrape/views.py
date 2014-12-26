@@ -6,7 +6,7 @@ from django.views.generic import ListView, TemplateView, DetailView
 from bs4 import BeautifulSoup
 
 from .models import ScrapeLog, ScrapeSite
-from .runners import StepsOfATraveler
+from .runners import StepsOfATravelerMixin
 
 
 class ScrapeLogListView(ListView):
@@ -25,11 +25,6 @@ class ScrapeAdminTemplateView(TemplateView):
     '''
     template_name = "scrapecontent/admin.html"
 
-    def get_context_data(self):
-        obj = StepsOfATraveler()
-
-        return {"object":obj}
-
 
 class ScrapeSiteDetailView(DetailView):
     '''
@@ -37,4 +32,10 @@ class ScrapeSiteDetailView(DetailView):
     '''
     model = ScrapeSite
     template_name = "scrapecontent/site.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(ScrapeSiteDetailView, self).get_context_data(**kwargs)
+        context['runner'] = StepsOfATravelerMixin()
+        return context
+
 
